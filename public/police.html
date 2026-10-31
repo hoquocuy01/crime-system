@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bàn Làm Việc Cảnh Sát Điều Tra</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/police.css">
+    <style>
+        /* RESET & BASE STYLES */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* BRAND HEADER PHÍA TRÊN */
+        .top-brand-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            background-color: #0f172a;
+            border-bottom: 1px solid #1e293b;
+            gap: 20px;
+        }
+
+        /* LOGO TRÒN & TO GẤP 3 (120px) */
+        .main-logo-img {
+            height: 120px;
+            width: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+            flex-shrink: 0;
+        }
+
+        .brand-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: 0.5px;
+        }
+
+        /* NAVBAR HEADER */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+
+        .navbar .brand {
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* MAIN LAYOUT (SIDEBAR + CONTENT) */
+        .main-container {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 180px);
+        }
+
+        /* SIDEBAR NAVIGATION */
+        .sidebar {
+            width: 260px;
+            background-color: #1e293b;
+            border-right: 1px solid #334155;
+            padding: 20px 12px;
+            flex-shrink: 0;
+        }
+
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 16px;
+            background: transparent;
+            color: #94a3b8;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .menu-btn:hover {
+            background-color: #334155;
+            color: #f8fafc;
+        }
+
+        .menu-btn.active {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+
+        /* CONTENT AREA */
+        .content-area {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card-box {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-box h3 {
+            margin-bottom: 20px;
+            color: #38bdf8;
+            font-size: 18px;
+        }
+
+        /* GRID THỐNG KÊ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-left-width: 4px;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .stat-card h4 {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* MODAL STYLES */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 24px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #334155;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .modal-title-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-logo {
+            height: 48px;
+            width: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .modal-header h3 { 
+            margin: 0; 
+            color: #38bdf8; 
+            font-size: 18px; 
+        }
+
+        .close-btn { 
+            background: none; 
+            border: none; 
+            color: #94a3b8; 
+            font-size: 24px; 
+            cursor: pointer; 
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #f8fafc;
+        }
+
+        .form-group { 
+            margin-bottom: 16px; 
+        }
+
+        .form-group label { 
+            display: block; 
+            margin-bottom: 6px; 
+            font-size: 14px; 
+            color: #cbd5e1; 
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #334155;
+        }
+
+        .crime-row-hover:hover {
+            background-color: #334155 !important;
+            transition: background 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BRAND HEADER PHÍA TRÊN -->
+    <div class="top-brand-header">
+        <img class="main-logo-img" src="Assest/logo1.png" alt="Logo" onerror="this.style.display='none'; this.nextElementSibling.insertAdjacentHTML('beforebegin', '🛡️ ');">
+        <span class="brand-title">Uyterpol - TRUNG TÂM ĐIỀU TRA CẢNH SÁT</span>
+    </div>
+
+    <!-- NAVBAR HEADER -->
+    <div class="navbar">
+        <div class="brand">
+            👮 HỆ THỐNG QUẢN LÝ BÀN LÀM VIỆC
+        </div>
+        <div class="user-info">
+            <span id="policeBadge" style="color: #38bdf8; font-weight: 600;">CÁN BỘ: Đang tải...</span>
+            <button class="btn btn-danger" onclick="logout()">Đăng Xuất</button>
+        </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="main-container">
+        <!-- SIDEBAR MENU -->
+        <aside class="sidebar">
+            <nav class="menu-list">
+                <button class="menu-btn active" onclick="switchTab('tab-home', this)">
+                    <span>🏠</span> Trang Chủ
+                </button>
+                <button class="menu-btn" onclick="switchTab('tab-profile', this)">
+                    <span>⚙️</span> Hồ Sơ Cá Nhân
+                </button>
+                <button class="menu-btn" onclick="switchTab('tab-password', this)">
+                    <span>🔒</span> Đổi Mật Khẩu
+                </button>
+                <button class="menu-btn" onclick="switchTab('tab-reports', this)">
+                    <span>📩</span> Tiếp Nhận Tố Giác
+                </button>
+                <button class="menu-btn" onclick="switchTab('tab-crimes', this)">
+                    <span>📁</span> Danh Sách Tội Phạm
+                </button>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="content-area">
+            <!-- TAB 1: TRANG CHỦ (THỐNG KÊ) -->
+            <section id="tab-home" class="tab-content active">
+                <div class="card-box">
+                    <h3>📊 Thống Kê Tổng Quan</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card" style="border-left-color: #f59e0b;">
+                            <h4>📩 Đơn Tố Giác Chờ Xử Lý</h4>
+                            <p id="statPendingReports" style="color: #f59e0b;">0</p>
+                        </div>
+                        <div class="stat-card" style="border-left-color: #ef4444;">
+                            <h4>📁 Hồ Sơ Tội Phạm Đang Quản Lý</h4>
+                            <p id="statTotalCrimes" style="color: #ef4444;">0</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: HỒ SƠ CÁ NHÂN -->
+            <section id="tab-profile" class="tab-content">
+                <div class="card-box">
+                    <h3>⚙️ Thông Tin Cán Bộ</h3>
+                    <div style="max-width: 480px;">
+                        <div class="form-group">
+                            <label>Họ và Tên Cán Bộ</label>
+                            <input type="text" id="polFullName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Đơn Vị Công Tác</label>
+                            <input type="text" id="polUnit" class="form-control">
+                        </div>
+                        <button class="btn btn-primary" onclick="updatePoliceProfile()">Lưu Thay Đổi</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: ĐỔI MẬT KHẨU -->
+            <section id="tab-password" class="tab-content">
+                <div class="card-box">
+                    <h3>🔒 Cập Nhật Mật Khẩu</h3>
+                    <div style="max-width: 480px;">
+                        <div class="form-group">
+                            <label>Mật Khẩu Hiện Tại</label>
+                            <input type="password" id="polOldPass" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Mật Khẩu Mới</label>
+                            <input type="password" id="polNewPass" class="form-control">
+                        </div>
+                        <button class="btn btn-warning" onclick="changePassword()">Đổi Mật Khẩu</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: TIẾP NHẬN TỐ GIÁC -->
+            <section id="tab-reports" class="tab-content">
+                <div class="card-box">
+                    <h3>📩 Tiếp Nhận & Xử Lý Đơn Tố Giác Tội Phạm</h3>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Người Tố Giác</th>
+                                    <th>Nội Dung</th>
+                                    <th>Địa Điểm</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="policeReportsTable">
+                                <!-- Dữ liệu render từ JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: DANH SÁCH TỘI PHẠM -->
+            <section id="tab-crimes" class="tab-content">
+                <div class="card-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0;">📁 Quản Lý Hồ Sơ Tội Phạm (CRUD)</h3>
+                        <button class="btn btn-primary" onclick="openAddCrimeModal()">+ Thêm Tội Phạm Mới</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Ảnh</th>
+                                    <th>Họ Tên</th>
+                                    <th>Tội Danh</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Mức Nguy Hiểm</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="crimesTable">
+                                <!-- Dữ liệu render từ JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL POPUP THÊM TỘI PHẠM MỚI -->
+    <div id="addCrimeModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title-container">
+                    <img src="Assest/logo1.png" alt="Logo" class="modal-logo" onerror="this.style.display='none';">
+                    <h3 id="crimeModalTitle">📁 Thêm Hồ Sơ Tội Phạm Mới</h3>
+                </div>
+                <button class="close-btn" onclick="closeAddCrimeModal()">&times;</button>
+            </div>
+            <form id="addCrimeForm" onsubmit="handleSaveCrime(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label>Họ và Tên Tội Phạm *</label>
+                        <input type="text" id="crimeFullName" placeholder="Nhập họ và tên" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Biệt Danh / Tên Gọi Khác</label>
+                        <input type="text" id="crimeAlias" placeholder="Ví dụ: Luyện 'Đen'">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label>Số CCCD / CMND</label>
+                        <input type="text" id="crimeIdentityCard" placeholder="Nhập số CCCD">
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày Sinh</label>
+                        <input type="date" id="crimeDob">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label>Quê Quán / Nơi Sinh</label>
+                        <input type="text" id="crimePob" placeholder="Nhập tỉnh/thành phố">
+                    </div>
+                    <div class="form-group">
+                        <label>Tội Danh *</label>
+                        <input type="text" id="crimeType" placeholder="Nhập tội danh" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Đặc Điểm Nhận Dạng</label>
+                    <textarea id="crimeIdentifyingMarks" rows="3" placeholder="Sẹo, nốt ruồi, hình xăm..."></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label>Trạng Thái *</label>
+                        <select id="crimeStatus">
+                            <option value="under_investigation">Đang xác minh / điều tra</option>
+                            <option value="wanted">Đang truy nã</option>
+                            <option value="detained">Đã tạm giữ</option>
+                            <option value="arrested">Đã bắt giữ</option>
+                            <option value="prosecuted">Đã khởi tố</option>
+                            <option value="awaiting_trial">Chờ xét xử</option>
+                            <option value="convicted">Đã kết án</option>
+                            <option value="serving_sentence">Đang chấp hành án</option>
+                            <option value="released">Đã được trả tự do</option>
+                            <option value="acquitted">Được tuyên vô tội</option>
+                            <option value="case_suspended">Tạm đình chỉ vụ án</option>
+                            <option value="case_closed">Đã kết thúc xử lý</option>
+                            <option value="deceased">Đã chết</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mức Độ Nguy Hiểm *</label>
+                        <select id="crimeDangerLevel">
+                            <option value="low">Thấp (LOW)</option>
+                            <option value="medium">Trung bình (MEDIUM)</option>
+                            <option value="high">Cao (HIGH)</option>
+                            <option value="extremely_dangerous">Đặc biệt nguy hiểm (EXTREMELY_DANGEROUS)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="crimeAvatarFile">Ảnh đại diện (tải từ máy)</label>
+                    <input type="file" id="crimeAvatarFile" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+                    <small style="display:block; margin-top:6px; color:#94a3b8;">Chỉ nhận JPG, PNG, WebP; tối đa 5 MB. Không cần nhập đường link.</small>
+                    <div style="margin-top:10px;">
+                        <img id="crimeAvatarPreview" alt="Xem trước ảnh đại diện" style="display:none; width:120px; height:120px; object-fit:cover; border-radius:8px; border:1px solid #475569;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" style="background:#64748b; color:#fff;" onclick="closeAddCrimeModal()">Hủy</button>
+                    <button type="submit" id="crimeSaveButton" class="btn btn-primary">Lưu Hồ Sơ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP XEM CHI TIẾT TỘI PHẠM -->
+    <div id="detailCrimeModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 620px;">
+            <div class="modal-header">
+                <div class="modal-title-container">
+                    <img src="Assest/logo1.png" alt="Logo" class="modal-logo" onerror="this.style.display='none';">
+                    <h3>🔍 Chi Tiết Hồ Sơ Tội Phạm</h3>
+                </div>
+                <button class="close-btn" onclick="closeDetailCrimeModal()">&times;</button>
+            </div>
+            <div id="detailCrimeContent" style="display: flex; gap: 20px; align-items: flex-start;">
+                <!-- Dữ liệu render động từ JS -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeDetailCrimeModal()">Quay Lại</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/police.js"></script>
+</body>
+</html>

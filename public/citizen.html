@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Cổng Thông Tin Công Dân</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        /* CSS cho Thanh Header Logo giống trang Police */
+        .police-header-brand {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #0b1329;
+            border-bottom: 1px solid #1e293b;
+            gap: 20px;
+        }
+
+        .police-header-brand .logo-img {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            flex-shrink: 0;
+        }
+
+        .police-header-brand .brand-title-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: #00aaff;
+            letter-spacing: 0.5px;
+        }
+
+        /* Modal popup chi tiết */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 24px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 620px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #334155;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 { margin: 0; color: #38bdf8; font-size: 18px; }
+
+        .close-btn { 
+            background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer; 
+        }
+        .close-btn:hover { color: #fff; }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER LOGO DẠNG POLICE -->
+    <div class="police-header-brand">
+        <img class="logo-img" src="Assest/logo1.png" alt="Logo" onerror="this.src='https://via.placeholder.com/85';">
+        <div class="brand-title-text">Uyterpol - CỔNG THÔNG TIN CÔNG DÂN</div>
+    </div>
+
+    <!-- NAVBAR CŨ GIỮ NGUYÊN -->
+    <div class="navbar">
+        <div class="brand">👤 CỔNG DỊCH VỤ CÔNG DÂN</div>
+        <div>
+            <span id="userName" style="margin-right: 15px; color: #f59e0b;"></span>
+            <button class="btn btn-danger" onclick="logout()">Đăng Xuất</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Sidebar Nút Bấm -->
+        <nav class="sidebar">
+            <button class="menu-btn active" onclick="switchTab('homeTab', this)">
+                🏠 Trang Chủ Công Dân
+            </button>
+            <button class="menu-btn" onclick="switchTab('profileTab', this)">
+                ⚙️ Hồ Sơ Cá Nhân
+            </button>
+            <button class="menu-btn" onclick="switchTab('passwordTab', this)">
+                🔒 Đổi Mật Khẩu
+            </button>
+            <button class="menu-btn" onclick="switchTab('reportTab', this)">
+                📢 Gửi Đơn Tố Giác
+            </button>
+            <!-- NÚT MỚI: LỊCH SỬ & PHẢN HỒI -->
+            <button class="menu-btn" onclick="switchTab('myReportsTabSection', this)">
+                📋 Lịch Sử Tố Giác
+            </button>
+            <button class="menu-btn" onclick="switchTab('wantedTabSection', this)">
+                📚 Danh Sách Tội Phạm
+            </button>
+        </nav>
+
+        <!-- Khu Vực Nội Dung -->
+        <main class="content-area">
+            
+            <!-- 1. TAB TRANG CHỦ -->
+            <div id="homeTab" class="tab-content active">
+                <div class="card">
+                    <h3>🏠 Tổng Quan & Thống Kê Hoạt Động</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 20px;">Chào mừng bạn đến với Cổng dịch vụ công dân. Dưới đây là thông tin tổng quan hệ thống:</p>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-title">Đơn Tố Giác Của Bạn</div>
+                            <div class="stat-value" id="statMyReports">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Tổng Số Hồ Sơ Tội Phạm</div>
+                            <div class="stat-value" style="color: #ef4444;" id="statTotalWanted">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Trạng Thái Tài Khoản</div>
+                            <div class="stat-value" style="color: #10b981; font-size: 18px;">Đã Xác Thực</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; padding: 15px; background: #0f172a; border-radius: 6px; border-left: 4px solid #3b82f6;">
+                        <strong>📢 Thông Báo Quan Trọng:</strong>
+                        <p style="margin-top: 5px; color: #94a3b8; font-size: 14px;">
+                            Bạn có thể theo dõi tiến độ xử lý và phản hồi của Cảnh sát đối với các đơn tố giác tại mục <b>"Lịch Sử Tố Giác"</b>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. TAB HỒ SƠ CÁ NHÂN -->
+            <div id="profileTab" class="tab-content">
+                <div class="card">
+                    <h3>⚙️ Quản Lý Hồ Sơ Cá Nhân</h3>
+                    <div class="form-group">
+                        <label>Họ và Tên</label>
+                        <input type="text" id="profFullName" class="form-control">
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Email</label>
+                        <input type="text" id="profEmail" class="form-control">
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>SĐT</label>
+                        <input type="text" id="profPhone" class="form-control">
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 15px;" onclick="updateProfile()">Cập Nhật Thông Tin</button>
+                </div>
+            </div>
+
+            <!-- 3. TAB ĐỔI MẬT KHẨU -->
+            <div id="passwordTab" class="tab-content">
+                <div class="card">
+                    <h3>🔒 Đổi Mật Khẩu</h3>
+                    <div class="form-group">
+                        <label>Mật Khẩu Cũ</label>
+                        <input type="password" id="oldPass" class="form-control">
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Mật Khẩu Mới</label>
+                        <input type="password" id="newPass" class="form-control">
+                    </div>
+                    <button class="btn btn-warning" style="margin-top: 15px;" onclick="changePassword()">Đổi Mật Khẩu</button>
+                </div>
+            </div>
+
+            <!-- 4. TAB GỬI ĐƠN TỐ GIÁC -->
+            <div id="reportTab" class="tab-content">
+                <div class="card">
+                    <h3>📢 Gửi Đơn Tố Giác Tội Phạm</h3>
+                    <div class="form-group">
+                        <label>Tiêu Đề Tin Báo</label>
+                        <input type="text" id="repTitle" class="form-control">
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Địa Điểm Xảy Ra Sự Việc</label>
+                        <input type="text" id="repLocation" class="form-control">
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Mô Tả Chi Tiết / Tố Giác</label>
+                        <textarea id="repDesc" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label><input type="checkbox" id="repAnon"> Gửi Ẩn Danh (Ẩn thông tin cá nhân của bạn)</label>
+                    </div>
+                    <button class="btn btn-danger" style="margin-top: 15px;" onclick="sendReport()">Gửi Đơn Tố Giác Khẩn Cấp</button>
+                </div>
+            </div>
+
+            <!-- 5. TAB XEM LỊCH SỬ & PHẢN HỒI TỐ GIÁC -->
+            <div id="myReportsTabSection" class="tab-content">
+                <div class="card">
+                    <h3>📋 Lịch Sử Đơn Tố Giác & Phản Hồi Từ Cảnh Sát</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã Đơn</th>
+                                <th>Tiêu Đề / Địa Điểm</th>
+                                <th>Ngày Gửi</th>
+                                <th>Trạng Thái</th>
+                                <th>Phản Hồi Từ Cảnh Sát</th>
+                                <th style="text-align: center;">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myReportsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 6. TAB DANH SÁCH TỘI PHẠM -->
+            <div id="wantedTabSection" class="tab-content">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                        <h3 style="margin: 0;">📚 Danh Sách Toàn Bộ Hồ Sơ Tội Phạm</h3>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="wantedSearchInput" class="form-control" 
+                                   placeholder="🔍 Nhập tên, biệt danh, tội danh..." 
+                                   style="width: 250px;" 
+                                   onkeyup="filterWantedList()">
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ảnh</th>
+                                <th>Họ Tên / Biệt Danh</th>
+                                <th>Tội Danh</th>
+                                <th>Đặc Điểm Nhận Dạng</th>
+                                <th>Trạng Thái Hồ Sơ</th>
+                                <th>Mức Độ</th>
+                                <th style="text-align: center;">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wantedTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL POPUP XEM CHI TIẾT ĐỐI TƯỢNG TRUY NÃ -->
+    <div id="detailCrimeModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>🔍 Chi Tiết Hồ Sơ Tội Phạm</h3>
+                <button class="close-btn" onclick="closeDetailCrimeModal()">&times;</button>
+            </div>
+            <div id="detailCrimeContent" style="display: flex; gap: 20px; align-items: flex-start;">
+                <!-- Dữ liệu render từ JS -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeDetailCrimeModal()">Đóng / Quay Lại</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/citizen.js"></script>
+</body>
+</html>

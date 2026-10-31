@@ -1,0 +1,93 @@
+:root {
+    --bg-primary: #0a0f1d;
+    --bg-secondary: #131c31;
+    --card-bg: #1e293b;
+    --accent-blue: #3b82f6;
+    --accent-red: #ef4444;
+    --accent-gold: #f59e0b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-secondary);
+    padding: 1rem 2rem;
+    border-bottom: 2px solid var(--accent-blue);
+}
+
+.brand {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #60a5fa;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-primary { background-color: var(--accent-blue); color: white; }
+.btn-danger { background-color: var(--accent-red); color: white; }
+.btn-warning { background-color: var(--accent-gold); color: black; }
+
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); }
+.form-control {
+    width: 100%;
+    padding: 0.6rem;
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+    color: white;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+th, td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+th { background-color: var(--bg-secondary); color: var(--accent-blue); }
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
